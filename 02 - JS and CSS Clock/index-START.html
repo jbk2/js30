@@ -6,17 +6,13 @@
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
-
-
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
+        <div class="hand minute-hand"></div>
         <div class="hand second-hand"></div>
       </div>
     </div>
-
-
   <style>
     html {
       background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
@@ -58,18 +54,69 @@
     }
 
     .hand {
-      width: 50%;
       height: 6px;
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transition: transform 0.1s ease-in-out;
+    }
+
+    .hour-hand {
+      background-color: green;
+      height: 8px;
+      width: 40%;
+      left: 10%;
+    }
+
+    .minute-hand {
+      background-color: red;
+      width: 50%;
+    }
+
+    .second-hand {
+      background-color: blue;
+      height: 3px;
+      width: 53%;
+      left: -2%;
+      transform: rotate(90deg);
     }
 
   </style>
 
   <script>
-
-
+    
+    const hourHand = document.querySelector(".hour-hand");
+    const minuteHand = document.querySelector(".minute-hand");
+    const secondHand = document.querySelector(".second-hand");
+    
+    function updateTime() {
+      let now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      
+      setHandRotation(hourHand, hours, 12);
+      setHandRotation(minuteHand, minutes, 60);
+      setHandRotation(secondHand, seconds, 60);
+    };
+    
+    function setHandRotation(hand, value, maxValue) {
+      degrees = 90 + (value * (360 / maxValue));
+      
+      if (degrees === 90) {
+        hand.style.transition = 'none';
+      }
+      else {
+        hand.style.transition = 'transform 0.1s ease-in-out';
+      };
+      
+      hand.style.transform = `rotate(${degrees}deg)`;
+    };
+    
+    setInterval(updateTime, 1000);
+    
   </script>
+
 </body>
 </html>
