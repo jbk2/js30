@@ -76,10 +76,18 @@
       return aAge > bAge ? -1 : 1; 
     });
 
-    console.table(ageSorted);
+    // console.table(ageSorted);
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
+
+    // Run in console whilst on the webpage:
+    const = data = document.querySelector('.mw-category');
+    const = lis = data.querySelectorAll('li');
+    const = blvdAry = Array.from(lis);
+    const blvdsWithDe = blvdAry.filter((blvd) => {
+      if blvd.textContent.includes(' de ') return true;
+    });
 
 
     // 7. sort Exercise
