@@ -101,11 +101,21 @@
       }
     });
 
-    console.log(sortedLastName);
+    // console.log(sortedLastName);
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
-    const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+    const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck', 'whateva'];
+
+    const sum = data.reduce((accumulator, item) => {
+      if (!accumulator[item]) {
+        accumulator[item] = 0
+      };
+      accumulator[item] ++;
+      return accumulator;
+    }, {});
+
+    console.log(sum);
 
   </script>
 </body>
