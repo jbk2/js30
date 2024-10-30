@@ -82,16 +82,26 @@
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
 
     // Run in console whilst on the webpage:
-    const = data = document.querySelector('.mw-category');
-    const = lis = data.querySelectorAll('li');
-    const = blvdAry = Array.from(lis);
-    const blvdsWithDe = blvdAry.filter((blvd) => {
-      if blvd.textContent.includes(' de ') return true;
-    });
+    // const info = document.querySelector('.mw-category');
+    // const lis = info.querySelectorAll('li');
+    // const blvdAry = Array.from(lis);
+    // const blvdsWithDe = blvdAry.filter((blvd) => {
+    //   if (blvd.textContent.includes(' de ')) return true;
+    // });
 
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+
+    const sortedLastName = people.sort((a, b) => {
+      if (a.split(', ')[0] > b.split(', ')[0]) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+
+    console.log(sortedLastName);
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
