@@ -16,7 +16,39 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const cities = [];
+  const suggestions = document.querySelector('.suggestions')
+  const inputField = document.querySelector('input');
+  
+  fetch(endpoint)
+    .then(blob => blob.json())
+    .then(data => cities.push(...data));
+  
+  function filterCities(input, cities) {
+    // get input, filter cities according to input and return
+    return cities.filter((element) => {
+      console.log(element);
+      let city = element.city.toLowerCase();
+      let state = element.state.toLowerCase();
+      return city.startsWith(input.toLowerCase()) || state.startsWith(input.toLowerCase());
+    });
+  };
+
+  function displayCities() {
+    // console.log(filtered);
+    suggestions.innerHTML = '';
+    const filteredCities = filterCities(inputField.value, cities);
+    filteredCities.forEach(element => {
+      let li = document.createElement('li')
+      li.innerHTML = element.city + ', ' + element.state +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + element.population; 
+      suggestions.appendChild(li);
+    });
+  };
+
+  inputField.addEventListener('input', displayCities);
 
 </script>
 </body>
