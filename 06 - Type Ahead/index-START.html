@@ -21,33 +21,88 @@
   const cities = [];
   const suggestions = document.querySelector('.suggestions')
   const inputField = document.querySelector('input');
+  let userLat, userLong;
+  options = { enableHighAccuracy: true }
   
   fetch(endpoint)
-    .then(blob => blob.json())
-    .then(data => cities.push(...data));
+  .then(blob => blob.json())
+  .then(data => cities.push(...data));
   
+  function successCallback(position) {
+    userLat = position.coords.latitude;
+    userLong = position.coords.longitude;
+    // console.log(userLat + ' - ' + userLong);
+    return { lat: userLat, long: userLong }; 
+  };
+
+  function failureCallback(error) {
+    console.log(error);
+  };
+
+  function getLocation() {
+    navigator.geolocation.getCurrentPosition(successCallback, failureCallback, options);
+  };
+  
+  function distance(fromLat, fromLong, toLat, toLong) {
+    if (isNaN(fromLat) || isNaN(fromLong) || isNaN(toLat) || isNaN(toLong)) {
+      console.log('Invalid coordinates:', fromLat, fromLong, toLat, toLong);
+      return NaN;
+    };
+
+    function toRadians(degrees) {
+      return degrees * (Math.PI / 180);
+    };
+
+    const earthsRadius = 6371; // Radius of the earth in km
+    const latDiff = toRadians(fromLat - toLat);
+    const lonDiff = toRadians(fromLong - toLong);
+    const a = 
+      Math.sin(latDiff/2) * Math.sin(latDiff/2) +
+      Math.cos(toRadians(fromLat)) * Math.cos(toRadians(toLat)) * 
+      Math.sin(lonDiff/2) * Math.sin(lonDiff/2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+
+    return earthsRadius * c; // Distance in km
+  }
+
   function filterCities(input, cities) {
     // get input, filter cities according to input and return
     return cities.filter((element) => {
-      console.log(element);
+      // console.log(element);
       let city = element.city.toLowerCase();
       let state = element.state.toLowerCase();
       return city.startsWith(input.toLowerCase()) || state.startsWith(input.toLowerCase());
     });
   };
 
+  function geoSortCities(cities) {
+    cities.sort((a, b) => {
+      a.distance = distance(a.latitude, a.longitude, userLat, userLong);
+      b.distance = distance(b.latitude, b.longitude, userLat, userLong);
+      // console.log("a.distance = " + a.distance + " - " + "b.distance =" + b.distance);
+      return a.distance - b.distance;
+    });
+    return cities;
+  };
+
   function displayCities() {
     // console.log(filtered);
     suggestions.innerHTML = '';
-    const filteredCities = filterCities(inputField.value, cities);
-    filteredCities.forEach(element => {
+    let filteredCities = filterCities(inputField.value, cities);
+    let geoSortedCities = geoSortCities(filteredCities);
+    console.log(geoSortedCities);
+    geoSortedCities.forEach(place => {
       let li = document.createElement('li')
-      li.innerHTML = element.city + ', ' + element.state +
-        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + element.population; 
+      li.innerHTML = place.city + ', ' + place.state +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + place.distance + 
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + place.population; 
       suggestions.appendChild(li);
     });
   };
 
+
+  getLocation();
   inputField.addEventListener('input', displayCities);
 
 </script>
