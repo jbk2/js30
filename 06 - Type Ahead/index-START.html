@@ -22,7 +22,7 @@
   const suggestions = document.querySelector('.suggestions')
   const inputField = document.querySelector('input');
   let userLat, userLong;
-  options = { enableHighAccuracy: true }
+  options = { enableHighAccuracy: false }
   
   fetch(endpoint)
   .then(blob => blob.json())
@@ -91,12 +91,12 @@
     suggestions.innerHTML = '';
     let filteredCities = filterCities(inputField.value, cities);
     let geoSortedCities = geoSortCities(filteredCities);
-    console.log(geoSortedCities);
+    // console.log(geoSortedCities);
     geoSortedCities.forEach(place => {
       let li = document.createElement('li')
       li.innerHTML = place.city + ', ' + place.state +
-        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + place.distance + 
-        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + place.population; 
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + place.distance.toPrecision(4) + 'kms' + 
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + "pop'n:" + place.population; 
       suggestions.appendChild(li);
     });
   };
