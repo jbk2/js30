@@ -10,30 +10,46 @@
     A drawing container.
   </canvas>
 <script>
-  
+
   const canvas = document.getElementById('draw');
   const ctxt = canvas.getContext("2d");
   ctxt.strokeStyle = '#fff123';
   ctxt.lineJoin = 'round';
-  ctxt.lineJoin = 'round';
+  ctxt.lineCap = 'round';
+  ctxt.lineWidth = '20';
+  ctxt.globalCompositeOperation = 'multiply';
   let x, y;
+  let hue = 0;
+  direction = true;
 
   ctxt.fillRect(50, 50, 50, 50);
 
   function draw(event) {
+    ctxt.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctxt.beginPath();
     ctxt.moveTo(x, y);
-    x = event.offsetX
-    y = event.offsetY
+    
+    [x, y] = [event.offsetX, event.offsetY]
     ctxt.lineTo(x, y)
     ctxt.stroke();
-    console.log('new x is; ' + x);
-    console.log('new y is; ' + y);
+    
+    hue ++;
+    if (hue > 360) {hue = 0};
+
+    if (ctxt.lineWidth > 70 || ctxt.lineWidth <= 1 ) {
+      direction = !direction;
+    };
+    
+    if (direction) {
+      ctxt.lineWidth ++;
+    } else {
+      ctxt.lineWidth --;
+    }
+
   };
   
   function penDown(event) {
-    x = event.offsetX
-    y = event.offsetY
+    [x, y] = [event.offsetX, event.offsetY]
     document.addEventListener('mousemove', draw);
     document.addEventListener('mouseup', () => {
       document.removeEventListener('mousemove', draw)
