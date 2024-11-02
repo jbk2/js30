@@ -6,14 +6,55 @@
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
-<canvas id="draw" width="800" height="800"></canvas>
+  <canvas id="draw" width="500" height="500">
+    A drawing container.
+  </canvas>
 <script>
+  
+  const canvas = document.getElementById('draw');
+  const ctxt = canvas.getContext("2d");
+  ctxt.strokeStyle = '#fff123';
+  ctxt.lineJoin = 'round';
+  ctxt.lineJoin = 'round';
+  let x, y;
+
+  ctxt.fillRect(50, 50, 50, 50);
+
+  function draw(event) {
+    ctxt.beginPath();
+    ctxt.moveTo(x, y);
+    x = event.offsetX
+    y = event.offsetY
+    ctxt.lineTo(x, y)
+    ctxt.stroke();
+    console.log('new x is; ' + x);
+    console.log('new y is; ' + y);
+  };
+  
+  function penDown(event) {
+    x = event.offsetX
+    y = event.offsetY
+    document.addEventListener('mousemove', draw);
+    document.addEventListener('mouseup', () => {
+      document.removeEventListener('mousemove', draw)
+    })
+  };
+
+  document.addEventListener('mousedown', penDown);
+  
+
 </script>
 
 <style>
   html, body {
     margin: 0;
   }
+
+  canvas {
+    border: 1px solid black;
+  }
+
+
 </style>
 
 </body>
