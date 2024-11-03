@@ -96,7 +96,51 @@
     </div>
   </div>
 
-<script>
-</script>
+  <script>
+    let firstSelectedIndex, shiftSelectedIndex;
+
+    function selectAll(event) {
+      if (event.key === "Shift") { 
+        console.log(event);
+        const items = Array.from(document.querySelectorAll('.item'));
+
+        // find index of first checked item
+        firstSelectedIndex = items.findIndex((item) => {
+          let input = item.querySelector("input[type='checkbox']");
+          return input && input.checked;
+        });
+        console.dir(firstSelectedIndex);
+        
+        document.addEventListener('click', (event) => {
+          let selectedElement = event.target.parentElement;
+          
+          // find index of shift key click checked item
+          shiftSelectedIndex = items.findIndex((item) => {
+            if (item === selectedElement) {
+              return item;
+            }
+          });
+          console.dir(shiftSelectedIndex);
+
+          let selectable = document.querySelectorAll(`.item:nth-child(n+${firstSelectedIndex}):nth-child(-n+${shiftSelectedIndex})`);
+          selectable.forEach((item) => {
+            item.querySelector("input[type='checkbox']").checked = true;
+          })
+          console.dir(selectable);
+        });
+
+        // items
+      };
+
+      // - listen for next click & get element clicked on
+      // - find other selected element
+      // - if other selected element found, select all in between two selected elements
+
+      // document.addEventListener('click', )
+    }
+
+    document.addEventListener('keydown', selectAll);
+
+  </script>
 </body>
 </html>
