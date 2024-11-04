@@ -97,45 +97,74 @@
   </div>
 
   <script>
-    let firstSelectedIndex, shiftSelectedIndex;
-
-    function selectAll(event) {
-      if (event.key === "Shift") { 
-        console.log(event);
-        const items = Array.from(document.querySelectorAll('.item'));
-
-        // find index of first checked item
-        firstSelectedIndex = items.findIndex((item) => {
-          let input = item.querySelector("input[type='checkbox']");
-          return input && input.checked;
-        });
-        console.dir(firstSelectedIndex);
+    // HTML 1ST IMPLEMENTATION:
+    // function selectAll(event) {
+    //   if (event.shiftKey) { 
+    //     const items = Array.from(document.querySelectorAll('.item'));
+    //     let firstSelectedIndex = items.findIndex((item) => {
+    //       let input = item.querySelector("input[type='checkbox']");
+    //       return input && input.checked;
+    //     });
+    //     // console.log(firstSelectedIndex);
         
-        if (firstSelectedIndex) {
-          document.addEventListener('click', (event) => {
-            let selectedElement = event.target.parentElement;
-            // find index of shift key click checked item
-            shiftSelectedIndex = items.findIndex((item) => {
-              if (item === selectedElement) {
-                return item + 1;
-              }
-            });
-            console.dir(shiftSelectedIndex);
-            let fromChldPosition = Math.min(firstSelectedIndex, shiftSelectedIndex) + 1;
-            let toChldPosition = Math.max(firstSelectedIndex, shiftSelectedIndex) + 1;
-            let selectable = document.querySelectorAll(`.item:nth-child(n+${fromChldPosition}):nth-child(-n+${toChldPosition})`);
+    //     document.addEventListener('click', (event) => {
+    //       // console.log(event.target);
+    //       let selectedElement = event.target.parentElement;
+    //       console.log(selectedElement);
+          
+    //       let shiftSelectedIndex = items.findIndex((item) => {
+    //         if (item === selectedElement) {
+    //           return item;
+    //         }
+    //       });
+    //       console.log(shiftSelectedIndex);
+          
+    //       let fromChldPosition = Math.min(firstSelectedIndex, shiftSelectedIndex) + 1;
+    //       let toChldPosition = Math.max(firstSelectedIndex, shiftSelectedIndex) + 1;
+    //       let selectable = document.querySelectorAll(`.item:nth-child(n+${fromChldPosition}):nth-child(-n+${toChldPosition})`);
 
-            selectable.forEach((item) => {
-              item.querySelector("input[type='checkbox']").checked = true;
-            })
-            console.dir(selectable);
-          });
-        };
+    //       selectable.forEach((item) => {
+    //         item.querySelector("input[type='checkbox']").checked = true;
+    //       })
+    //     });
+    //   };
+    // }
 
-      };
+    // document.addEventListener('keydown', selectAll);
+    
+    // ======================================================
+
+    // BOOLEAN & FOR EACH IMPLEMENTATION
+    const checkboxes = document.querySelectorAll(".item input[type='checkbox']");    
+    let lastChecked;
+
+    function selectRange(event) {
+      if (!event.target.matches("input[type='checkbox']")) return;
+      let currentClickedCheckbox = event.target;
+
+      if (event.shiftKey && lastChecked && currentClickedCheckbox !== lastChecked) {
+        let check = false;
+        
+        checkboxes.forEach((checkbox, index) => {
+          if (checkbox === lastChecked || checkbox === currentClickedCheckbox) {
+            check = !check;
+            checkbox.checked = true;
+          }
+          // Check all checkboxes in between
+          if (check) {
+            checkbox.checked = true;
+          }
+        });
+
+        lastChecked = currentClickedCheckbox;
+      } else {
+        lastChecked = currentClickedCheckbox;  // No shift key, just update lastChecked
+      }
     }
 
-    document.addEventListener('keydown', selectAll);
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('click', selectRange);
+    });
 
   </script>
 </body>
