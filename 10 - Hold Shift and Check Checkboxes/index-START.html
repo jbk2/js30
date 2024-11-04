@@ -111,32 +111,28 @@
         });
         console.dir(firstSelectedIndex);
         
-        document.addEventListener('click', (event) => {
-          let selectedElement = event.target.parentElement;
-          
-          // find index of shift key click checked item
-          shiftSelectedIndex = items.findIndex((item) => {
-            if (item === selectedElement) {
-              return item;
-            }
+        if (firstSelectedIndex) {
+          document.addEventListener('click', (event) => {
+            let selectedElement = event.target.parentElement;
+            // find index of shift key click checked item
+            shiftSelectedIndex = items.findIndex((item) => {
+              if (item === selectedElement) {
+                return item + 1;
+              }
+            });
+            console.dir(shiftSelectedIndex);
+            let fromChldPosition = Math.min(firstSelectedIndex, shiftSelectedIndex) + 1;
+            let toChldPosition = Math.max(firstSelectedIndex, shiftSelectedIndex) + 1;
+            let selectable = document.querySelectorAll(`.item:nth-child(n+${fromChldPosition}):nth-child(-n+${toChldPosition})`);
+
+            selectable.forEach((item) => {
+              item.querySelector("input[type='checkbox']").checked = true;
+            })
+            console.dir(selectable);
           });
-          console.dir(shiftSelectedIndex);
+        };
 
-          let selectable = document.querySelectorAll(`.item:nth-child(n+${firstSelectedIndex}):nth-child(-n+${shiftSelectedIndex})`);
-          selectable.forEach((item) => {
-            item.querySelector("input[type='checkbox']").checked = true;
-          })
-          console.dir(selectable);
-        });
-
-        // items
       };
-
-      // - listen for next click & get element clicked on
-      // - find other selected element
-      // - if other selected element found, select all in between two selected elements
-
-      // document.addEventListener('click', )
     }
 
     document.addEventListener('keydown', selectAll);
